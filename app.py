@@ -180,4 +180,4 @@ def make_figure(sector_options):
 
 
 if __name__ == '__main__':
-    app_nic4.run_server(debug=False, port=9002)
+    app_nic4.run_server(debug=True)
