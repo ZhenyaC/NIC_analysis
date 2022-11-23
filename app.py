@@ -112,7 +112,7 @@ app_nic4 = dash.Dash(__name__,
 sector_options = test2['Sector'].unique()
 
 colors = {"background": "#000000", "text": "#FFFFFF"}
-
+server=app_nic4.server
 
 app_nic4.layout = html.Div([
   #html.Img(src=logo_link, style={'margin':'30px 0px 0px 0px' }),
@@ -180,4 +180,4 @@ def make_figure(sector_options):
 
 
 if __name__ == '__main__':
-    app_nic4.run_server(debug=False, port=9002)
+    app_nic4.run_server(debug=True)
