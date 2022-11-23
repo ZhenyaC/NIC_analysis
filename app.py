@@ -104,7 +104,7 @@ nic_vols_fig.update_layout(
 nic_vols_fig.update_yaxes(title_text='New Issue Concession (basis points)', secondary_y =True)
 
 
-app_nic4 = dash.Dash(__name__, 
+app = dash.Dash(__name__, 
                 external_stylesheets=[dbc.themes.BOOTSTRAP], 
                 meta_tags=[{"name": "viewport", "content": "width=device-width"}],
                 suppress_callback_exceptions=True)
@@ -112,9 +112,9 @@ app_nic4 = dash.Dash(__name__,
 sector_options = test2['Sector'].unique()
 
 colors = {"background": "#000000", "text": "#FFFFFF"}
-server=app_nic4.server
+server=app.server
 
-app_nic4.layout = html.Div([
+app.layout = html.Div([
   #html.Img(src=logo_link, style={'margin':'30px 0px 0px 0px' }),
   html.H1('NEW ISSUE CONCESSIONS TRENDS FOR US INVESTMENT GRADE'),
   html.Div(
@@ -147,7 +147,7 @@ app_nic4.layout = html.Div([
   style={'text-align':'center', 'display':'inline-block', 'width':'100%'}
   )
 
-@app_nic4.callback(Output('graph', 'figure'),
+@app.callback(Output('graph', 'figure'),
              [Input('select-type', 'value')])
 
 def make_figure(sector_options):
@@ -180,4 +180,4 @@ def make_figure(sector_options):
 
 
 if __name__ == '__main__':
-    app_nic4.run_server(debug=True)
+    app.run_server(debug=True)
