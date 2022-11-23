@@ -12,7 +12,7 @@ import pandas as pd
 from dash.dependencies import Input, Output
 import numpy as np
 
-new_issue_concession = pd.read_csv('../NIC/data/new_issue_concession.csv')
+new_issue_concession = pd.read_csv('../NIC_analysis/data/new_issue_concession.csv')
 new_issue_concession['PricingDate'] = pd.to_datetime(new_issue_concession['PricingDate'])
 new_issue_concession.rename(columns={'Size (m)': 'Size_m', 'Book Size (m)': 'Book_Amount'}, inplace=True)
 new_issue_concession['Nic']=pd.to_numeric(new_issue_concession['Nic'], errors='coerce')
@@ -21,7 +21,7 @@ new_issue_concession['avg_nic_per_month_all_sectors'] = new_issue_concession.gro
 new_issue_concession['avg_nic_per_month_sector'] = new_issue_concession.groupby(['month', 'Sector']).Nic.transform('mean')
 new_issue_concession['Month_Volume'] = new_issue_concession.groupby(['month'])['Size_m'].sum()
 
-treasury = pd.read_csv('../NIC/data/treasury.csv')
+treasury = pd.read_csv('../NIC_analysis/data/treasury.csv')
 treasury['Date'] = pd.to_datetime(treasury['Date'])
 treasury['month'] = pd.PeriodIndex(treasury.Date, freq='m')
 avg_treasury = treasury.groupby('month').agg({'two_year':'mean', 'ten_year':'mean'}).reset_index().set_index('month').sort_values('month', ascending =False)
@@ -180,4 +180,4 @@ def make_figure(sector_options):
 
 
 if __name__ == '__main__':
-    app_nic4.run_server(debug=True)
+    app_nic4.run_server(debug=False, port=9002)
