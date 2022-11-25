@@ -13,7 +13,7 @@ from dash.dependencies import Input, Output
 import numpy as np
 import dash_bootstrap_components as dbc
 
-new_issue_concession = pd.read_csv('../NIC_analysis/data/new_issue_concession.csv')
+new_issue_concession = pd.read_csv('data/new_issue_concession.csv')
 
 exclude_these = [
 25010511,
@@ -563,7 +563,7 @@ new_issue_concession['avg_nic_per_month_all_sectors'] = new_issue_concession.gro
 new_issue_concession['avg_nic_per_month_sector'] = new_issue_concession.groupby(['month', 'Sector']).Nic.transform('mean')
 new_issue_concession['Month_Volume'] = new_issue_concession.groupby(['month'])['Size_m'].sum()
 
-treasury = pd.read_excel('../NIC_analysis/data/treasury.xlsx')
+treasury = pd.read_excel('data/treasury.xlsx')
 treasury['Date'] = pd.to_datetime(treasury['Date'])
 treasury['month'] = pd.PeriodIndex(treasury.Date, freq='m')
 avg_treasury=treasury.groupby('month').agg({'two_year':'mean','ten_year':'mean'}).reset_index().set_index('month').sort_values('month', ascending =False)
