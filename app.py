@@ -13,7 +13,7 @@ from dash.dependencies import Input, Output
 import numpy as np
 import dash_bootstrap_components as dbc
 
-new_issue_concession = pd.read_csv('./data/new_issue_concession.csv')
+new_issue_concession = pd.read_csv('../NIC_analysis/data/new_issue_concession.csv')
 
 exclude_these = [
 25010511,
@@ -563,7 +563,7 @@ new_issue_concession['avg_nic_per_month_all_sectors'] = new_issue_concession.gro
 new_issue_concession['avg_nic_per_month_sector'] = new_issue_concession.groupby(['month', 'Sector']).Nic.transform('mean')
 new_issue_concession['Month_Volume'] = new_issue_concession.groupby(['month'])['Size_m'].sum()
 
-treasury = pd.read_excel('./data/treasury.xlsx')
+treasury = pd.read_excel('../NIC_analysis/data/treasury.xlsx')
 treasury['Date'] = pd.to_datetime(treasury['Date'])
 treasury['month'] = pd.PeriodIndex(treasury.Date, freq='m')
 avg_treasury=treasury.groupby('month').agg({'two_year':'mean','ten_year':'mean'}).reset_index().set_index('month').sort_values('month', ascending =False)
@@ -605,117 +605,131 @@ nic_by_ratings_time_series=nic_by_ratings[nic_by_ratings['ratings'].isin(include
 
 xcx=nic_by_ratings_time_series.groupby(['month', 'ratings'])['Nic'].mean().reset_index().set_index('month')
 
-nic_by_rating=px.bar(xcx, x=xcx.index.strftime("%Y-%m"), y='Nic', color= 'ratings', category_orders={"ratings": ['AAA', 'AA', 'A', 'BBB']}, template="plotly_dark")
-nic_by_rating.update_layout(xaxis=dict(
-        title='Timeline',
-        titlefont_size=14,
-        tickfont_size=12
-        ))
-nic_by_rating.update_yaxes(title=dict(text='New Issue Concession (Basis Points)'))
+#nic_by_rating=px.bar(xcx, x=xcx.index.strftime("%Y-%m"), y='Nic', color= 'ratings', category_orders={"ratings": ['AAA', 'AA', 'A', 'BBB']}, template="plotly_dark")
+#nic_by_rating.update_layout(xaxis=dict(
+#        title='Timeline',
+#        titlefont_size=14,
+#        tickfont_size=12
+#        ))
+#nic_by_rating.update_yaxes(title=dict(text='New Issue Concession (Basis Points)'))
 
 
-nic_vols=nic_treasury_merged.groupby('month').agg({'Nic': 'mean', 'Size_m':'sum'}).reset_index().set_index('month')
+#nic_vols=nic_treasury_merged.groupby('month').agg({'Nic': 'mean', 'Size_m':'sum'}).reset_index().set_index('month')
 
 
-CHART_THEME = "plotly_dark"
+#CHART_THEME = "plotly_dark"
 
 # Create figure with secondary y-axis
-nic_vols_fig = make_subplots(specs=[[{"secondary_y": True}]])
-nic_vols_fig.layout.template = CHART_THEME
+#nic_vols_fig = make_subplots(specs=[[{"secondary_y": True}]])
+#nic_vols_fig.layout.template = CHART_THEME
 # Add traces
-nic_vols_fig.add_trace(
-    go.Bar(x=nic_vols.index.strftime("%Y-%m"), y=nic_vols['Size_m']*1e6, name="Volume US$"),
-    secondary_y=False,
-)
-nic_vols_fig.add_trace(
-    go.Scatter(x=nic_vols.index.strftime("%Y-%m"), y=nic_vols['Nic'], name="New Issue Concession (bp)"),
-    secondary_y=True,
-)
+#nic_vols_fig.add_trace(
+#    go.Bar(x=nic_vols.index.strftime("%Y-%m"), y=nic_vols['Size_m']*1e6, name="Volume US$"),
+#    secondary_y=False,
+#)
+#nic_vols_fig.add_trace(
+#    go.Scatter(x=nic_vols.index.strftime("%Y-%m"), y=nic_vols['Nic'], name="New Issue Concession (bp)"),
+#    secondary_y=True,
+#)
 
-nic_vols_fig.layout.height=500
-nic_vols_fig.update_layout(margin = dict(t=50, b=50, l=25, r=25))  # optm the chart space
+#nic_vols_fig.layout.height=500
+#nic_vols_fig.update_layout(margin = dict(t=50, b=50, l=25, r=25))  # optm the chart space
 
-nic_vols_fig.update_layout(
-    title='Volume and Average New Issue Concession By Month',
-    #xaxis=dict(tickmode = 'array', tickvals = nic_vols.index, ticktext = nic_vols['month']),
-    yaxis=dict(
-        title='Value:$US',
-        titlefont_size=14,
-        tickfont_size=12,
-        ))
-nic_vols_fig.update_yaxes(title_text='New Issue Concession (basis points)', secondary_y =True)
+#nic_vols_fig.update_layout(
+#    title='Volume and Average New Issue Concession By Month',
+#    #xaxis=dict(tickmode = 'array', tickvals = nic_vols.index, ticktext = nic_vols['month']),
+#    yaxis=dict(
+#        title='Value:$US',
+#        titlefont_size=14,
+#        tickfont_size=12,
+#        ))
+#nic_vols_fig.update_yaxes(title_text='New Issue Concession (basis points)', secondary_y =True)
 
 
 app = dash.Dash(__name__)
 server=app.server
-sector_options = test2['Sector'].unique()
+#sector_options = test2['Sector'].unique()
 
-colors = {"background": "#000000", "text": "#FFFFFF"}
+#colors = {"background": "#000000", "text": "#FFFFFF"}
 
-app.layout = html.Div([
+#app.layout = html.Div([
   #html.Img(src=logo_link, style={'margin':'30px 0px 0px 0px' }),
-  html.H1('NEW ISSUE CONCESSIONS TRENDS FOR US INVESTMENT GRADE'),
-  html.Div(
-    children=[
-    html.Div(
-        children=[
-          html.H3('NEW ISSUE CONCESSION BY RATING'),
-          dcc.Dropdown(),
-          dcc.Graph(id='scatter', figure=nic_by_rating),
-        ],
-        style={'width':'350px', 'height':'650px', 'display':'inline-block', 
-               'vertical-align':'top', 'border':'1px solid black', 'padding':'20px'}),
-    html.Div(
-      children=[
-        dcc.Dropdown(id='select-type',
-                     options = [str(i) for i in sector_options],
-                     value = ['two_year', 'ten_year'],
-                     multi=True                    
+#  html.H1('NEW ISSUE CONCESSIONS TRENDS FOR US INVESTMENT GRADE'),
+#  html.Div(
+#    children=[
+#    html.Div(
+#        children=[
+#          html.H3('NEW ISSUE CONCESSION BY RATING'),
+#          dcc.Dropdown(),
+#          dcc.Graph(id='scatter', figure=nic_by_rating),
+#        ],
+#        style={'width':'350px', 'height':'650px', 'display':'inline-block', 
+#               'vertical-align':'top', 'border':'1px solid black', 'padding':'20px'}),
+#    html.Div(
+#      children=[
+#        dcc.Dropdown(id='select-type',
+#                     options = [str(i) for i in sector_options],
+#                     value = ['two_year', 'ten_year'],
+#                     multi=True                    
                      
-        ),  
-        dcc.Graph(id='graph'),
+#        ),  
+#        dcc.Graph(id='graph'),
           
-         dcc.Dropdown(id='select-type2'                 
+#         dcc.Dropdown(id='select-type2'                 
                       
-         ),
-        dcc.Graph(id='graph2', figure=nic_vols_fig)
-      ],
-      style={'width':'700px', 'height':'650px','display':'inline-block'})
-    ]),], 
-  style={'text-align':'center', 'display':'inline-block', 'width':'100%'}
-  )
+#         ),
+#        dcc.Graph(id='graph2', figure=nic_vols_fig)
+#      ],
+#      style={'width':'700px', 'height':'650px','display':'inline-block'})
+#    ]),], 
+#  style={'text-align':'center', 'display':'inline-block', 'width':'100%'}
+#  )
 
-@app.callback(Output('graph', 'figure'),
-             [Input('select-type', 'value')])
+#@app.callback(Output('graph', 'figure'),
+#             [Input('select-type', 'value')])
 
-def make_figure(sector_options):
-    if  ['two_year', 'ten_year'] in sector_options:
-        dff = test2.copy()
-    else:
-        dff = test2.loc[test2['Sector'].isin(sector_options)]
+#def make_figure(sector_options):
+#    if  ['two_year', 'ten_year'] in sector_options:
+#        dff = test2.copy()
+#    else:
+#        dff = test2.loc[test2['Sector'].isin(sector_options)]
     
     
     
-    fig = px.line(
-        dff,
-        x=dff.index.strftime("%Y-%m"),
-        y=dff['avg_nic_per_month_sector'],
-        color = 'Sector'
+#    fig = px.line(
+#        dff,
+#        x=dff.index.strftime("%Y-%m"),
+#        y=dff['avg_nic_per_month_sector'],
+#        color = 'Sector'
 
-        )
-    fig.update_layout(
-        plot_bgcolor=colors["background"],
-        paper_bgcolor=colors["background"],
-        font_color=colors["text"],
+#        )
+#    fig.update_layout(
+#        plot_bgcolor=colors["background"],
+#        paper_bgcolor=colors["background"],
+#        font_color=colors["text"],
         
-    )   
-    fig.update_xaxes(title_text="Timeline")
-    fig.update_yaxes(title_text="New Issue Concession (basis points)")
+#    )   
+#    fig.update_xaxes(title_text="Timeline")
+#    fig.update_yaxes(title_text="New Issue Concession (basis points)")
  
 
-    return fig
+#    return fig
 
 
+
+#if __name__ == '__main__':
+#    app.run_server(debug=True)
+app.layout = html.Div(children=[
+    html.H1(children='Hello Dash'),
+
+    html.Div(children='''
+        Dash: A web application framework for your data.
+    '''),
+
+    dcc.Graph(
+        id='example-graph'
+    )
+])
 
 if __name__ == '__main__':
     app.run_server(debug=True)
